@@ -4,60 +4,138 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.NotLogged;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.Drive;
+import frc.robot.subsystems.Drivebase;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
+@Logged
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // Creates our controller
+  // https://docs.wpilib.org/en/stable/docs/software/basic-programming/coordinate-system.html#joystick-and-controller-coordinate-system
+  @NotLogged
+  private final CommandXboxController driveStick = new CommandXboxController(0);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // Creates our subsystems
+  private final Drivebase drivebase = new Drivebase();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  // create new demo sendablechooser
+  private SendableChooser<Command> demoChooser;
+
+  // Algae commands are mostly untested
+  Command genericCommand = Commands.parallel(
+  // fortnite.playFortnite(),
+  );
+
+  // Tells the robot to drive by default.
   public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
+
+    this.configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
+  private double[] getScaledXY() {
+    // Array for storing the x/y inputs from the controller
+    double[] xy = new double[2];
+
+    // Assigning inputs to array locations. X and Y are switched because the
+    // controller is funky.
+
+    return xy;
+  }
+
+  public void resetGyro() {
+    drivebase.resetGyroCommand();
+  }
+
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    /* Intake/Output buttons */
+    // Intake
+    driveStick.leftBumper().whileTrue(
+        Commands.parallel(
+        /// commands here
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+        ));
+    // Output
+
+    // DRIVESTICK BUTTONS
+    driveStick.b().whileTrue(
+        Commands.parallel(
+        // commands here
+        ));
+
+    // L2
+    driveStick.a().onTrue(Commands.parallel(
+
+    // commansd here
+
+    ));
+    // L3
+    driveStick.x().onTrue(
+        Commands.parallel(
+        // commands here
+
+        ));
+    // L4
+    driveStick.y().onTrue(
+        Commands.parallel(
+        // commands here
+
+        ));
+
+    /* Reset gyro button */
+    driveStick.povUp().toggleOnTrue(drivebase.resetGyroCommand());
+
+    Trigger leftTriggerLow = driveStick.leftTrigger(0.1);
+    Trigger leftTriggerHigh = driveStick.leftTrigger(0.9);
+
+    leftTriggerHigh
+        .whileTrue(Commands.parallel(
+        // write commands here
+
+        ));
+
+    driveStick.rightTrigger()
+        .onTrue(Commands.sequence(
+        // write commands here
+        ));
+
+    var fullRumbleCommand = Commands.startEnd(
+        () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),
+        () -> driveStick.setRumble(RumbleType.kBothRumble, 0));
+
+    var leftRumbleCommand = Commands.startEnd(
+        () -> driveStick.setRumble(RumbleType.kLeftRumble, 0.5),
+        () -> driveStick.setRumble(RumbleType.kLeftRumble, 0));
+
+    var leftAlignCommand = Commands.parallel(
+        leftRumbleCommand.withTimeout(0.5));
+
+    driveStick.leftStick().toggleOnTrue(leftAlignCommand);
+    driveStick.povLeft().toggleOnTrue(leftAlignCommand);
+
+    driveStick.start().onTrue(Commands.parallel(
+
+        // commands here
+        fullRumbleCommand.withTimeout(0.5)));
+
+    var rightRumbleCommand = Commands.startEnd(
+        () -> driveStick.setRumble(RumbleType.kRightRumble, 0.5),
+        () -> driveStick.setRumble(RumbleType.kRightRumble, 0));
+
+    var rightAlignCommand = Commands.parallel(
+        rightRumbleCommand.withTimeout(0.5));
+
+    driveStick.rightStick().toggleOnTrue(rightAlignCommand);
+    driveStick.povRight().toggleOnTrue(rightAlignCommand);
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
 }
