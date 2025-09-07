@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
@@ -12,11 +13,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.Drive;
-import frc.robot.subsystems.Drivebase;
+import frc.robot.subsystems.DriveTrain;
 
 @Logged
 public class RobotContainer {
@@ -25,8 +29,9 @@ public class RobotContainer {
   @NotLogged
   private final CommandXboxController driveStick = new CommandXboxController(0);
 
+  private final DriveTrain drivetrain = new DriveTrain();
+
   // Creates our subsystems
-  private final Drivebase drivebase = new Drivebase();
 
   // create new demo sendablechooser
   private SendableChooser<Command> demoChooser;
@@ -40,6 +45,14 @@ public class RobotContainer {
   public RobotContainer() {
 
     this.configureBindings();
+
+    drivetrain.setDefaultCommand(
+        new RunCommand(
+            () -> drivetrain.drive(
+                driveStick.getLeftY(),
+                driveStick.getRightX()),
+            drivetrain));
+
   }
 
   private double[] getScaledXY() {
@@ -53,19 +66,28 @@ public class RobotContainer {
   }
 
   public void resetGyro() {
-    drivebase.resetGyroCommand();
   }
 
   private void configureBindings() {
+
     /* Intake/Output buttons */
     // Intake
-    driveStick.leftBumper().whileTrue(
+
+    // make sure off cooldown before doing again
+
+    driveStick.leftBumper().onTrue(
         Commands.parallel(
-        /// commands here
+            /// commands here
+            new InstantCommand(drivetrain::shiftUp, drivetrain)
 
         ));
     // Output
+    driveStick.rightBumper().onTrue(
+        Commands.parallel(
+            /// commands here
+            new InstantCommand(drivetrain::shiftDown, drivetrain)
 
+        ));
     // DRIVESTICK BUTTONS
     driveStick.b().whileTrue(
         Commands.parallel(
@@ -92,7 +114,6 @@ public class RobotContainer {
         ));
 
     /* Reset gyro button */
-    driveStick.povUp().toggleOnTrue(drivebase.resetGyroCommand());
 
     Trigger leftTriggerLow = driveStick.leftTrigger(0.1);
     Trigger leftTriggerHigh = driveStick.leftTrigger(0.9);

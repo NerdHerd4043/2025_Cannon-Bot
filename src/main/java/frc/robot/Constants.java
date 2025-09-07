@@ -9,6 +9,11 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class Constants {
+
+  public static final class RobotConstants {
+    public static final int PCMID = 7;
+  }
+
   public static final class DriveConstants {
     // Radius (maybe) of the area that the drivestick input has no effect
     public static final double deadband = 0.09;
@@ -73,6 +78,13 @@ public class Constants {
       public static final Translation2d backLeft = new Translation2d(-moduleLocationLength, moduleLocationLength);
       public static final Translation2d backRight = new Translation2d(-moduleLocationLength, -moduleLocationLength);
     }
+
+    public static final int rightMotorID = 1;
+    public static final int leftMotorID = 0;
+
+    public static final int shifterID = 4;
+
+    public static final boolean lowGear = false;
 
     // This replaces the config in the PathPlanner app GUI
 
