@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -22,32 +23,30 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
 public class DriveTrain extends SubsystemBase {
-  private final SparkMax leftDriveMotor = new SparkMax(DriveConstants.leftMotorID, MotorType.kBrushless);
-  private final SparkMax rightDriveMotor = new SparkMax(DriveConstants.rightMotorID, MotorType.kBrushless);
+  private final WPI_TalonSRX frontLeftMotor = new WPI_TalonSRX(DriveConstants.frontLeftMotorID);
+  private final WPI_TalonSRX frontRightMotor = new WPI_TalonSRX(DriveConstants.frontRightMotorID);
+  private final WPI_TalonSRX backLeftMotor = new WPI_TalonSRX(DriveConstants.backLeftMotorID);
+  private final WPI_TalonSRX backRightMotor = new WPI_TalonSRX(DriveConstants.backRightMotorID);
 
-  Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM, DriveConstants.shifterID);
+  private final Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM,
+      DriveConstants.shifterID);
 
-  DifferentialDrive diffDrive;
+  private final DifferentialDrive diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);;
 
   /** Creates a new ExampleSubsystem. */
   public DriveTrain() {
 
-    SparkMaxConfig leftDriveMotorConfig = new SparkMaxConfig();
-    SparkMaxConfig rightDriveMotorConfig = new SparkMaxConfig();
+    frontLeftMotor.configFactoryDefault();
+    frontRightMotor.configFactoryDefault();
+    backLeftMotor.configFactoryDefault();
+    backRightMotor.configFactoryDefault();
 
-    leftDriveMotor.configure(leftDriveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    rightDriveMotor.configure(rightDriveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    diffDrive = new DifferentialDrive(rightDriveMotor, leftDriveMotor);
-
+    backLeftMotor.follow(frontLeftMotor);
+    backRightMotor.follow(frontRightMotor);
   }
 
-  public void drive(Double speed, Double rot) {
+  public void drive(double speed, double rot) {
     diffDrive.arcadeDrive(speed, rot, true);
-  }
-
-  public void stop() {
-    drive(0., 0.);
   }
 
   public void shift(boolean a) {
@@ -58,41 +57,34 @@ public class DriveTrain extends SubsystemBase {
 
   long lastExecutionTime = 0;
   final long cooldownTime = 2000; // 2 seconds in milliseconds
-  boolean canShift = false;
 
-  private void getGearboxCooldown() {
-
-    // set bool false by default
-    canShift = false;
+  private boolean canShift() {
     // now reset current time
     long currentTime = System.currentTimeMillis();
     if (currentTime >= lastExecutionTime + cooldownTime) {
       // Execute the function
       System.out.println("Gear Shifted at " + currentTime + "ms.");
       lastExecutionTime = currentTime; // Update the last execution time
-
       // move it by setting bool to true
-      canShift = true;
+      return true;
     } else {
       // Cooldown is still active
       long timeLeft = (lastExecutionTime + cooldownTime) - currentTime;
       System.out.println("Gear on cooldown. Wait " + timeLeft + " ms.");
+      return false;
     }
-
   }
 
   public void shiftUp() {
     // check gear cooldown for gearbox; if off cooldown, set bool and run command
-    getGearboxCooldown();
-    if (canShift) {
+    if (canShift()) {
       shift(!DriveConstants.lowGear);
     }
   }
 
   public void shiftDown() {
     // check gear cooldown for gearbox; if off cooldown, set bool and run command
-    getGearboxCooldown();
-    if (canShift) {
+    if (canShift()) {
       shift(DriveConstants.lowGear);
     }
   }
@@ -102,14 +94,6 @@ public class DriveTrain extends SubsystemBase {
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a

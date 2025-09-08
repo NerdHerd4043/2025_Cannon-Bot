@@ -14,6 +14,14 @@ public class Constants {
     public static final int PCMID = 7;
   }
 
+  public static final class CannonConstants {
+
+    public static final int triggerPort = 3; // TODO: find actual trigger port
+    public static final int shootPosition = 0; // TODO: find actual shoot position
+    public static final int restPosition = 90; // TODO: find actual shoot position
+
+  }
+
   public static final class DriveConstants {
     // Radius (maybe) of the area that the drivestick input has no effect
     public static final double deadband = 0.09;
@@ -79,8 +87,10 @@ public class Constants {
       public static final Translation2d backRight = new Translation2d(-moduleLocationLength, -moduleLocationLength);
     }
 
-    public static final int rightMotorID = 1;
-    public static final int leftMotorID = 0;
+    public static final int frontRightMotorID = 0;
+    public static final int frontLeftMotorID = 1;
+    public static final int backRightMotorID = 2;
+    public static final int backLeftMotorID = 3;
 
     public static final int shifterID = 4;
 
