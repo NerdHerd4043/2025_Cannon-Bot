@@ -7,13 +7,17 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CannonManipulator extends SubsystemBase {
   private final SparkMax manipulatorMotor = new SparkMax(5, MotorType.kBrushless);
+
+  private RelativeEncoder encoder = manipulatorMotor.getEncoder();
 
   /** Creates a new CannonManipulator. */
   public CannonManipulator() {
@@ -23,8 +27,45 @@ public class CannonManipulator extends SubsystemBase {
 
   }
 
+  private boolean withinMaxBounds() {
+    // TODO: write hard stop logic
+
+    return !(encoder.getPosition() >= -3);
+  }
+
+  private boolean withinMinBounds() {
+    // TODO: write hard stop logic
+
+    return !(encoder.getPosition() <= -1);
+  }
+
+  public Command up() {
+    return this.run(() -> {
+      if (withinMaxBounds()) {
+        manipulatorMotor.set(0.1);
+      }
+    }).finallyDo(() -> {
+      if (withinMaxBounds()) {
+        manipulatorMotor.stopMotor();
+      }
+    });
+
+  }
+
+  public Command down() {
+    return this.run(() -> {
+      if (withinMinBounds()) {
+        manipulatorMotor.set(-0.1);
+      }
+    }).finallyDo(() -> {
+      if (withinMinBounds()) {
+        manipulatorMotor.stopMotor();
+      }
+    });
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
   }
 }
