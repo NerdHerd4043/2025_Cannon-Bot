@@ -45,9 +45,7 @@ public class CannonManipulator extends SubsystemBase {
         manipulatorMotor.set(0.1);
       }
     }).finallyDo(() -> {
-      if (withinMaxBounds()) {
-        manipulatorMotor.stopMotor();
-      }
+      manipulatorMotor.stopMotor();
     });
 
   }
@@ -58,9 +56,7 @@ public class CannonManipulator extends SubsystemBase {
         manipulatorMotor.set(-0.1);
       }
     }).finallyDo(() -> {
-      if (withinMinBounds()) {
-        manipulatorMotor.stopMotor();
-      }
+      manipulatorMotor.stopMotor();
     });
   }
 
