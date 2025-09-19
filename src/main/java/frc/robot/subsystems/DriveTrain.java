@@ -31,6 +31,9 @@ public class DriveTrain extends SubsystemBase {
     backLeftMotor.configFactoryDefault();
     backRightMotor.configFactoryDefault();
 
+    frontRightMotor.setInverted(true);
+    backRightMotor.setInverted(true);
+
     backLeftMotor.follow(frontLeftMotor);
     backRightMotor.follow(frontRightMotor);
   }
