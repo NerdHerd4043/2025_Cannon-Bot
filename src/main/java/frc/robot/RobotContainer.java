@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -18,58 +16,57 @@ import frc.robot.subsystems.CannonManipulator;
 
 @Logged
 public class RobotContainer {
-    private final CannonManipulator cannonManipulator = new CannonManipulator();
-    // Creates our controller
-    // https://docs.wpilib.org/en/stable/docs/software/basic-programming/coordinate-system.html#joystick-and-controller-coordinate-system
-    @NotLogged
-    private final CommandXboxController driveStick = new CommandXboxController(0);
+        // private final CannonManipulator cannonManipulator = new CannonManipulator();
+        // Creates our controller
+        // https://docs.wpilib.org/en/stable/docs/software/basic-programming/coordinate-system.html#joystick-and-controller-coordinate-system
+        @NotLogged
+        private final CommandXboxController driveStick = new CommandXboxController(0);
 
-    private final DriveTrain drivetrain = new DriveTrain();
-    private Cannon cannon;
+        private final DriveTrain drivetrain = new DriveTrain();
+        // private Cannon cannon = new Cannon();
 
-    // Creates our subsystems
+        // Creates our subsystems
 
-    // create new demo sendablechooser
-    private SendableChooser<Command> demoChooser;
+        // create new demo sendablechooser
 
-    // Tells the robot to drive by default.
-    public RobotContainer() {
+        // Tells the robot to drive by default.
+        public RobotContainer() {
 
-        this.configureBindings();
+                // this.configureBindings();
 
-        drivetrain.setDefaultCommand(
-                new RunCommand(() -> drivetrain.drive(driveStick.getLeftY(), driveStick.getRightX()), drivetrain));
+                drivetrain.setDefaultCommand(
+                                new RunCommand(() -> drivetrain.drive(driveStick.getLeftY(), driveStick.getRightX()),
+                                                drivetrain));
 
-    }
+        }
 
-    public void resetGyro() {
-    }
+        public void resetGyro() {
+        }
 
-    public void rumbleController() {
+        public void rumbleController() {
 
-    }
+        }
 
-    private void configureBindings() {
+        // private void configureBindings() {
 
-        driveStick.leftBumper().onTrue(
-                drivetrain.runOnce(drivetrain::shiftUp));
-        // Output
-        driveStick.rightBumper().onTrue(
-                /// commands here
-                drivetrain.runOnce(drivetrain::shiftDown));
+        // driveStick.leftBumper().onTrue(
+        // drivetrain.runOnce(drivetrain::shiftUp));
+        // // Output
+        // driveStick.rightBumper().onTrue(
+        // /// commands here
+        // drivetrain.runOnce(drivetrain::shiftDown));
 
-        driveStick.rightTrigger().onTrue(
-                cannon.runOnce(cannon::shoot));
+        // driveStick.rightTrigger().onTrue(
+        // cannon.runOnce(cannon::shoot));
 
-        driveStick.rightTrigger().onFalse(
-                cannon.runOnce(cannon::resetTrigger));
+        // driveStick.rightTrigger().onFalse(
+        // cannon.runOnce(cannon::resetTrigger));
 
-        var fullRumbleCommand = Commands.startEnd(
-                () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),
-                () -> driveStick.setRumble(RumbleType.kBothRumble, 0));
+        // var fullRumbleCommand = Commands.startEnd(
+        // () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),
+        // () -> driveStick.setRumble(RumbleType.kBothRumble, 0));
 
-        driveStick.x().whileTrue(cannonManipulator.up());
-        driveStick.b().whileTrue(cannonManipulator.down());
-    }
-
+        // driveStick.x().whileTrue(cannonManipulator.up());
+        // driveStick.b().whileTrue(cannonManipulator.down());
+        // }
 }

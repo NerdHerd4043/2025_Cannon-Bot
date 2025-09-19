@@ -30,13 +30,13 @@ public class CannonManipulator extends SubsystemBase {
   private boolean withinMaxBounds() {
     // TODO: write hard stop logic
 
-    return !(encoder.getPosition() >= -3);
+    return !(encoder.getPosition() >= -0.9);
   }
 
   private boolean withinMinBounds() {
     // TODO: write hard stop logic
 
-    return !(encoder.getPosition() <= -1);
+    return !(encoder.getPosition() <= -0.1);
   }
 
   public Command up() {
