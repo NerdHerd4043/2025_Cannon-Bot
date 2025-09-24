@@ -18,8 +18,10 @@ public class DriveTrain extends SubsystemBase {
   private final WPI_TalonSRX backLeftMotor = new WPI_TalonSRX(DriveConstants.backLeftMotorID);
   private final WPI_TalonSRX backRightMotor = new WPI_TalonSRX(DriveConstants.backRightMotorID);
 
-  private final Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM,
+  private final Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.REVPH,
       DriveConstants.shifterID);
+
+  public static boolean shiftVar = true;
 
   private final DifferentialDrive diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);;
 
@@ -36,14 +38,26 @@ public class DriveTrain extends SubsystemBase {
 
     backLeftMotor.follow(frontLeftMotor);
     backRightMotor.follow(frontRightMotor);
+
+    shift();
   }
 
   public void drive(double speed, double rot) {
     diffDrive.arcadeDrive(speed, rot, true);
   }
 
-  public void shift(boolean a) {
-    shifter.set(a);
+  public void shift() {
+    boolean a;
+    if (canShift()) {
+      if (shiftVar) {
+        a = !DriveConstants.lowGear;
+        shiftVar = !shiftVar;
+      } else {
+        a = DriveConstants.lowGear;
+        shiftVar = !shiftVar;
+      }
+      shifter.set(a);
+    }
   }
 
   // cooldown
@@ -65,20 +79,6 @@ public class DriveTrain extends SubsystemBase {
       long timeLeft = (lastExecutionTime + cooldownTime) - currentTime;
       System.out.println("Gear on cooldown. Wait " + timeLeft + " ms.");
       return false;
-    }
-  }
-
-  public void shiftUp() {
-    // check gear cooldown for gearbox; if off cooldown, set bool and run command
-    if (canShift()) {
-      shift(!DriveConstants.lowGear);
-    }
-  }
-
-  public void shiftDown() {
-    // check gear cooldown for gearbox; if off cooldown, set bool and run command
-    if (canShift()) {
-      shift(DriveConstants.lowGear);
     }
   }
 

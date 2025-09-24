@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -22,6 +23,7 @@ public class CannonManipulator extends SubsystemBase {
   /** Creates a new CannonManipulator. */
   public CannonManipulator() {
     SparkMaxConfig manipulatorMotorConfig = new SparkMaxConfig();
+    manipulatorMotorConfig.idleMode(IdleMode.kBrake);
 
     manipulatorMotor.configure(manipulatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

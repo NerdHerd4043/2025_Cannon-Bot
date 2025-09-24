@@ -13,19 +13,20 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Cannon;
 import frc.robot.subsystems.CannonManipulator;
+import frc.robot.subsystems.DriveTrain;
 
 @Logged
 public class RobotContainer {
-        /*
-         * private final CannonManipulator cannonManipulator = new CannonManipulator();
-         */
+
+        private final CannonManipulator cannonManipulator = new CannonManipulator();
+
         // Creates our controller
         // https://docs.wpilib.org/en/stable/docs/software/basic-programming/coordinate-system.html#joystick-and-controller-coordinate-system
         @NotLogged
         private final CommandXboxController driveStick = new CommandXboxController(0);
 
         private final DriveTrain drivetrain = new DriveTrain();
-        /* private Cannon cannon = new Cannon(); */
+        private Cannon cannon = new Cannon();
 
         // Creates our subsystems
 
@@ -34,7 +35,7 @@ public class RobotContainer {
         // Tells the robot to drive by default.
         public RobotContainer() {
 
-                /* this.configureBindings(); */
+                this.configureBindings();
 
                 drivetrain.setDefaultCommand(
                                 new RunCommand(() -> drivetrain.drive(driveStick.getLeftY(), driveStick.getRightX()),
@@ -49,28 +50,25 @@ public class RobotContainer {
 
         }
 
-        /*
-         * private void configureBindings() {
-         * 
-         * driveStick.leftBumper().onTrue(
-         * drivetrain.runOnce(drivetrain::shiftUp));
-         * // Output
-         * driveStick.rightBumper().onTrue(
-         * // commands here
-         * drivetrain.runOnce(drivetrain::shiftDown));
-         * 
-         * driveStick.rightTrigger().onTrue(
-         * cannon.runOnce(cannon::shoot));
-         * 
-         * driveStick.rightTrigger().onFalse(
-         * cannon.runOnce(cannon::resetTrigger));
-         * 
-         * var fullRumbleCommand = Commands.startEnd(
-         * () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),
-         * () -> driveStick.setRumble(RumbleType.kBothRumble, 0));
-         * 
-         * driveStick.x().whileTrue(cannonManipulator.up());
-         * driveStick.b().whileTrue(cannonManipulator.down());
-         * }
-         */
+        private void configureBindings() {
+
+                driveStick.b().onTrue(
+                                drivetrain.runOnce(drivetrain::shift));
+
+                // Output
+
+                driveStick.x().onTrue(
+                                cannon.runOnce(cannon::shoot));
+
+                driveStick.x().onFalse(
+                                cannon.runOnce(cannon::resetTrigger));
+
+                // var fullRumbleCommand = Commands.startEnd(
+                // () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),
+                // () -> driveStick.setRumble(RumbleType.kBothRumble, 0));
+
+                driveStick.leftBumper().whileTrue(cannonManipulator.up());
+                driveStick.rightBumper().whileTrue(cannonManipulator.down());
+        }
+
 }
