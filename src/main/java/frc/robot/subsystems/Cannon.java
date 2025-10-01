@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CannonConstants;
 
@@ -14,9 +16,7 @@ public class Cannon extends SubsystemBase {
 
   /** Creates a new CannonManipulator. */
   public Cannon() {
-    // reset trigger on startup
-    this.resetTrigger();
-
+    triggerServo.set(CannonConstants.restPosition);
   }
 
   @Override
@@ -26,12 +26,20 @@ public class Cannon extends SubsystemBase {
 
   public void shoot() {
     triggerServo.set(CannonConstants.shootPosition);
-
   }
 
   public void resetTrigger() {
     triggerServo.set(CannonConstants.restPosition);
-
   }
+
+  // public Command shoot() {
+  // return this.runOnce(() -> {
+  // // if (withinMaxBounds()) {
+  // triggerServo.set(CannonConstants.shootPosition);
+  // // }
+  // }).andThen(Commands.waitSeconds(2)).finallyDo(() -> {
+  // triggerServo.set(CannonConstants.restPosition);
+  // });
+  // }
 
 }

@@ -16,9 +16,10 @@ public class Constants {
 
   public static final class CannonConstants {
 
-    public static final int triggerPort = 3; // TODO: find actual trigger port
-    public static final int shootPosition = 0; // TODO: find actual shoot position
+    public static final int triggerPort = 0; // TODO: find actual trigger port
+    public static final int shootPosition = 50; // TODO: find actual shoot position
     public static final int restPosition = 90; // TODO: find actual shoot position
+    public static final int manipulatorMotorID = 5;
 
   }
 

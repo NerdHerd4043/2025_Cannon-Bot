@@ -57,11 +57,8 @@ public class RobotContainer {
 
                 // Output
 
-                driveStick.x().onTrue(
-                                cannon.runOnce(cannon::shoot));
-
-                driveStick.x().onFalse(
-                                cannon.runOnce(cannon::resetTrigger));
+                driveStick.x().whileTrue(cannon.runOnce(cannon::shoot));
+                driveStick.x().whileFalse(cannon.runOnce(cannon::resetTrigger));
 
                 // var fullRumbleCommand = Commands.startEnd(
                 // () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),

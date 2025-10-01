@@ -14,9 +14,10 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CannonConstants;
 
 public class CannonManipulator extends SubsystemBase {
-  private final SparkMax manipulatorMotor = new SparkMax(5, MotorType.kBrushless);
+  private final SparkMax manipulatorMotor = new SparkMax(CannonConstants.manipulatorMotorID, MotorType.kBrushless);
 
   private RelativeEncoder encoder = manipulatorMotor.getEncoder();
 
@@ -29,23 +30,23 @@ public class CannonManipulator extends SubsystemBase {
 
   }
 
-  private boolean withinMaxBounds() {
-    // TODO: write hard stop logic
+  // private boolean withinMaxBounds() {
+  // // TODO: write hard stop logic
 
-    return !(encoder.getPosition() >= -0.9);
-  }
+  // return !(encoder.getPosition() >= -3);
+  // }
 
-  private boolean withinMinBounds() {
-    // TODO: write hard stop logic
+  // private boolean withinMinBounds() {
+  // // TODO: write hard stop logic
 
-    return !(encoder.getPosition() <= -0.1);
-  }
+  // return !(encoder.getPosition() <= -1);
+  // }
 
   public Command up() {
     return this.run(() -> {
-      if (withinMaxBounds()) {
-        manipulatorMotor.set(0.1);
-      }
+      // if (withinMaxBounds()) {
+      manipulatorMotor.set(0.05);
+      // }
     }).finallyDo(() -> {
       manipulatorMotor.stopMotor();
     });
@@ -54,9 +55,9 @@ public class CannonManipulator extends SubsystemBase {
 
   public Command down() {
     return this.run(() -> {
-      if (withinMinBounds()) {
-        manipulatorMotor.set(-0.1);
-      }
+      // if (withinMinBounds()) {
+      manipulatorMotor.set(-0.05);
+      // }
     }).finallyDo(() -> {
       manipulatorMotor.stopMotor();
     });
