@@ -18,7 +18,7 @@ public class DriveTrain extends SubsystemBase {
   private final WPI_TalonSRX backLeftMotor = new WPI_TalonSRX(DriveConstants.backLeftMotorID);
   private final WPI_TalonSRX backRightMotor = new WPI_TalonSRX(DriveConstants.backRightMotorID);
 
-  private final Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.REVPH,
+  private final Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM,
       DriveConstants.shifterID);
 
   public static boolean shiftVar = true;

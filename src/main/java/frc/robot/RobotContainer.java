@@ -6,14 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Cannon;
 import frc.robot.subsystems.CannonManipulator;
-import frc.robot.subsystems.DriveTrain;
 
 @Logged
 public class RobotContainer {
