@@ -38,6 +38,10 @@ public class RobotContainer {
                                 new RunCommand(() -> drivetrain.drive(driveStick.getLeftY(), driveStick.getRightX()),
                                                 drivetrain));
 
+                cannonManipulator.setDefaultCommand(cannonManipulator.setSpeed(() -> {
+                        return (driveStick.getLeftTriggerAxis() - driveStick.getRightTriggerAxis()) / 10;
+                }));
+
         }
 
         public void resetGyro() {
@@ -54,8 +58,8 @@ public class RobotContainer {
 
                 // Output
 
-                driveStick.x().whileTrue(cannon.runOnce(cannon::shoot));
-                driveStick.x().whileFalse(cannon.runOnce(cannon::resetTrigger));
+                driveStick.x().whileTrue(cannon.run(cannon::shoot));
+                driveStick.y().whileTrue(cannon.run(cannon::resetTrigger));
 
                 // var fullRumbleCommand = Commands.startEnd(
                 // () -> driveStick.setRumble(RumbleType.kBothRumble, 0.5),

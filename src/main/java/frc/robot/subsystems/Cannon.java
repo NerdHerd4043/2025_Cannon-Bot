@@ -25,11 +25,11 @@ public class Cannon extends SubsystemBase {
   }
 
   public void shoot() {
-    triggerServo.set(CannonConstants.shootPosition);
+    triggerServo.setAngle(90);
   }
 
   public void resetTrigger() {
-    triggerServo.set(CannonConstants.restPosition);
+    triggerServo.setAngle(-90);
   }
 
   // public Command shoot() {

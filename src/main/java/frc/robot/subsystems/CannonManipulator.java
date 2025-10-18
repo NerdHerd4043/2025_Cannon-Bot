@@ -8,6 +8,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -41,6 +44,12 @@ public class CannonManipulator extends SubsystemBase {
 
   // return !(encoder.getPosition() <= -1);
   // }
+
+  public Command setSpeed(DoubleSupplier input) {
+    return this.run(() -> {
+      manipulatorMotor.set(input.getAsDouble());
+    });
+  }
 
   public Command up() {
     return this.run(() -> {
